@@ -6,8 +6,15 @@ class Question < ApplicationRecord
   # the foreign_key (i.e. question_id) meaning that the `answers` has
   # the `question_id`.
   has_many :answers, dependent: :destroy
+  # `dependent: :destroy` will cause all associated answers to be destroyed
+  # when the associated is destroyed.
+
+  # `dependent: :nullify` will cause all associated answers to no longuer
+  # associated before a question is destrored. In other words, their
+  # `question_id` column will be set to `NULL`.
+
   has_many :likes, dependent: :destroy
-  #has_many :users, through: :likes
+  # has_many :users, through: :likes
   has_many :likers, through: :likes, source: :user
 
   has_many :votes, dependent: :destroy
@@ -16,12 +23,16 @@ class Question < ApplicationRecord
   has_many :taggings, dependent: :destroy
   has_many :tags, through: :taggings
 
-  # `dependent: :destroy` will cause all associated answers to be destroyed
-  # when the associated is destroyed.
+  extend FriendlyId
+  # history: will store slug history in friendly_id_slugs table
+  # finders: will make it so we can use use Question.find as we did with normal
+  #          id so we don't need to change anything.
+  friendly_id :title, use: [:slugged, :history, :finders]
 
-  # `dependent: :nullify` will cause all associated answers to no longuer
-  # associated before a question is destrored. In other words, their
-  # `question_id` column will be set to `NULL`.
+  # if you want to user friendly_id gem, make sure to comment out to_param
+  # def to_param
+  #   "#{id}-#{title}".parameterize
+  # end
 
   # `has_many :answers` will add the following instance methods to the
   # the Question model:
@@ -81,11 +92,11 @@ class Question < ApplicationRecord
   private
   def no_monkey
     if title.present? && title.downcase.include?('monkey')
-      errors.add(:title, "should not have a monkey! 🙈")
+      errors.add(:title, "should not have a monkey! ð")
     end
 
     if body.present? && body.downcase.include?('monkey')
-      errors.add(:body, "should not have a monkey! 🙈")
+      errors.add(:body, "should not have a monkey! ð")
     end
   end
 

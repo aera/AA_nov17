@@ -83,6 +83,9 @@ class QuestionsController < ApplicationController
   end
 
   def update
+    @question.slug = nil # this will force friendly_id to re-generate slug, if
+                         # we enabled the `history` option then the previous
+                         # will be stored history and will still work
     if @question.update(question_params)
       redirect_to question_path(@question)
     else
