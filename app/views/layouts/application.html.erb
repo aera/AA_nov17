@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>AwesomeAnswers</title>
+    <%= csrf_meta_tags %>
+
+    <%= stylesheet_link_tag    'application', media: 'all' %>
+    <%= javascript_include_tag 'application' %>
+  </head>
+
+  <body>
+    <a href="/">Home</a>
+    |
+    <%= link_to 'New Question', new_question_path %>
+    |
+    <%= link_to 'Questions', questions_path %>
+    <% if user_signed_in? %>
+      |
+      <%= link_to 'My Liked Questions', questions_path({liked: true}) %>
+    <% end %>
+    <!-- <a href="/about">About Us</a> -->
+    <!-- <a href="<%= about_path %>">About Us</a> -->
+    <%# the line below is recommended to use instead of the two above. link_to
+        is a Rails built-in view helper that generates an <a> HTML tag. The
+        first argument for the `link_to` method is the anchor text, the second
+        argument is the URL. If you're linking internally then it's best to
+        use URL helpers such as `about_path`
+     %>
+    |
+    <%= link_to('About Us', about_path, { id: 'abc', class: 'xyz' }) %>
+    <%#= link_to('About Us', about_url, { id: 'abc', class: 'xyz' }) %>
+    <%#= link_to 'About Us', about_path, id: 'abc', class: 'xyz' %>
+    |
+    <%= link_to 'Contact Us', contact_path %>
+    |
+    <% if user_signed_in? %>
+      <span>Hello, <%= current_user.first_name %>!</span>
+      <% if current_user.is_admin? %>
+        |
+        <%= link_to 'Dashboard', admin_dashboard_index_path %>
+      <% end %>
+      |
+      <%= link_to(
+        'Sign Out',
+        session_path,
+        method: :delete,
+        data: {confirm: 'Do you really want to sign out?'}
+      ) %>
+    <% else %>
+      <%= link_to 'Sign In', new_session_path %>
+      |
+      <%= link_to 'Sign Up', new_user_path %>
+    <% end %>
+    <hr>
+
+    <div class="container">
+
+      <% if flash[:notice].present? %>
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+          <%= flash[:notice] %>
+          <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+      <% elsif flash[:alert].present? %>
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+          <%= flash[:alert] %>
+          <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+      <% end %>
+
+      <%= yield %>
+    </div>
+  </body>
+</html>

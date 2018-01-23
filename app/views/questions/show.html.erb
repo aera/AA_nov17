@@ -1,0 +1,99 @@
+<h2><%= @question.title %></h2>
+
+<p><%= @question.body %></p>
+
+<p>By <%= @question.user&.full_name || "[deleted]" %></p>
+
+<p><strong>View Count:</strong> <%= @question.view_count %></p>
+<p><strong>Created At:</strong> <%= time_ago_in_words(@question.created_at) %> ago</p>
+<p><strong>Update At:</strong> <%= time_ago_in_words(@question.updated_at) %> ago</p>
+
+<p><strong>Tags:</strong> <%= @question.tags.map(&:name).join(', ') %></p>
+
+<% if can?(:crud, @question) %>
+  <%= link_to 'Edit', edit_question_path(@question) %>
+  <%=
+    link_to(
+      'Delete',
+      question_path(@question),
+      method: :delete,
+      data: {confirm: 'Are you sure?'}
+    )
+  %>
+<% end %>
+
+<% if can?(:like, @question) %>
+  <% if @user_like %>
+    <%= link_to fa_icon("thumbs-up 2x"), like_path(@user_like), method: :delete %>
+  <% else %>
+    <%= link_to fa_icon("thumbs-o-up 2x"), question_likes_path(@question), method: :post %>
+  <% end %>
+<% end %>
+(<%= pluralize(@question.likes.count, 'like') %>)
+
+<%= question_vote(@user_vote, @question).html_safe if user_signed_in? %>
+<%# code block for line above moved to votes_helper file %>
+
+<h2>Answers</h2>
+
+<%# If we want to create a form for a model that is nested
+    that belongs_to another model, we must give `form_for`
+    both models in an array as its first argument where
+    the first of element of the array is the model instance
+    that the second element belongs to.
+%>
+
+<%= form_for [@question, @answer] do |f| %>
+  <% if @answer.errors.present? %>
+    <p>
+      <%= @answer.errors.full_messages.join(', ') %>
+    </p>
+  <% end %>
+
+  <div>
+    <%= f.text_area :body %>
+  </div>
+
+  <%= f.submit %>
+<% end %>
+
+<div class="answer-list">
+    <% @answers.each do |answer| %>
+      <div class="answer-list-item">
+        <p><%= answer.body %></p>
+        <p>By <%= answer.user&.full_name || "[deleted]" %></p>
+        <p>
+          <strong>Created At:</strong>
+          <%= time_ago_in_words(answer.created_at) %> ago
+        </p>
+
+        <% if user_signed_in? && can?(:star, answer) %>
+          <% user_star = current_user.stars.find_by_answer_id(answer) %>
+          <% if user_star %>
+            <%= link_to fa_icon('star 2x'), star_path(user_star), method: :delete %>
+          <% else %>
+            <%= link_to fa_icon('star-o 2x'), answer_stars_path(answer), method: :post %>
+          <% end %>
+        <% end %>
+
+
+        <% if can?(:destroy, answer) %>
+          <%= link_to(
+            'Delete',
+            question_answer_path(@question, answer),
+            data: {confirm: 'Are you sure?'},
+            method: :delete
+          ) %>
+        <% end %>
+      </div>
+    <% end %>
+</div>
+
+
+
+
+
+
+
+
+<%# %>

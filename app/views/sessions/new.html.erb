@@ -1,0 +1,23 @@
+<h1>Sign In</h1>
+
+<%# We can use `form_for` to generate forms without providing
+    a it a model instance. Instead, give it a symbol which will
+    be used as if it were its model name, but you will still
+    to provide the correction `action` with `url:` argument.
+
+    For example, `form_for :session, url: session_path do ...`
+    will create a form with the `action` equal to `session_path`.
+%>
+
+<%= form_for :session, url: session_path do |f| %>
+  <div>
+    <%= f.label :email %>
+    <%= f.email_field :email %>
+  </div>
+  <div>
+    <%= f.label :password %>
+    <%= f.password_field :password %>
+  </div>
+
+  <%= f.submit 'Submit' %>
+<% end %>
