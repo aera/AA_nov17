@@ -19,6 +19,7 @@
 <%= simple_form_for @question do |form| %>
   <%= form.input :title %>
   <%= form.input :body %>
+  <%= form.input :image %>
   <%= form.association :tags, input_html: { class: 'chosen-select' } %>
 
   <%#= form.collection_check_boxes :tag_ids, Tag.all, :id, :name %>

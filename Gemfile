@@ -40,6 +40,10 @@ gem 'chosen-rails'
 gem 'bootstrap'
 gem 'active_model_serializers'
 gem 'rack-cors'
+gem 'carrierwave', '~>1.0'
+gem 'mini_magick'
+gem 'fog'
+
 # Use Capistrano for deployment
 # gem 'capistrano-rails', group: :development
 gem 'cancancan'
