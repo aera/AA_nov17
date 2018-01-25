@@ -51,6 +51,13 @@ gem 'faker', github: 'stympy/faker'
 gem 'cowsay', '~> 0.3.0'
 gem 'simple_form'
 gem 'friendly_id', '~>5.2.3'
+
+gem 'geocoder'
+gem 'gmaps4rails'
+gem 'underscore-rails'
+gem 'cocoon'
+gem 'jwt'
+
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console
   gem 'byebug', platforms: [:mri, :mingw, :x64_mingw]

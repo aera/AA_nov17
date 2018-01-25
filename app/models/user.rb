@@ -11,6 +11,13 @@ class User < ApplicationRecord
   has_many :votes, dependent: :destroy
   has_many :voted_questions, through: :votes, source: :question
 
+  geocoded_by :address
+  after_validation :geocode
+
+  extend FriendlyId
+  friendly_id :full_name, use: [:slugged, :history, :finders]
+
+
   # `has_secure_password` is a built-in Rails method for models that
   # provides user authentication features:
   # 0. It will add two attribute accessors for `password` and

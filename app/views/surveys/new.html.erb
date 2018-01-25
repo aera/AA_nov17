@@ -1,0 +1,14 @@
+<%= simple_form_for @survey do |f| %>
+  <%= f.input :body %>
+
+  <div id="options">
+    <%= f.simple_fields_for :options do   |opt| %>
+      <%= render 'option_fields', f: opt %>
+    <% end %>
+  </div>
+  <div class="links">
+    <%= link_to_add_association 'add option', f, :options  %>
+  </div>
+
+  <%= f.submit class: 'btn btn-primary' %>
+<% end %>

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180123230800) do
+ActiveRecord::Schema.define(version: 20180124234323) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -61,6 +61,14 @@ ActiveRecord::Schema.define(version: 20180123230800) do
     t.index ["user_id"], name: "index_likes_on_user_id"
   end
 
+  create_table "options", force: :cascade do |t|
+    t.bigint "survey_id"
+    t.string "body"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["survey_id"], name: "index_options_on_survey_id"
+  end
+
   create_table "questions", force: :cascade do |t|
     t.string "title"
     t.text "body"
@@ -81,6 +89,12 @@ ActiveRecord::Schema.define(version: 20180123230800) do
     t.datetime "updated_at", null: false
     t.index ["answer_id"], name: "index_stars_on_answer_id"
     t.index ["user_id"], name: "index_stars_on_user_id"
+  end
+
+  create_table "surveys", force: :cascade do |t|
+    t.text "body"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
   end
 
   create_table "taggings", force: :cascade do |t|
@@ -107,8 +121,13 @@ ActiveRecord::Schema.define(version: 20180123230800) do
     t.datetime "updated_at", null: false
     t.boolean "is_admin", default: false
     t.string "api_key"
+    t.string "address"
+    t.float "longitude"
+    t.float "latitude"
+    t.string "slug"
     t.index ["api_key"], name: "index_users_on_api_key"
     t.index ["email"], name: "index_users_on_email", unique: true
+    t.index ["slug"], name: "index_users_on_slug", unique: true
   end
 
   create_table "votes", force: :cascade do |t|
@@ -125,6 +144,7 @@ ActiveRecord::Schema.define(version: 20180123230800) do
   add_foreign_key "answers", "users"
   add_foreign_key "likes", "questions"
   add_foreign_key "likes", "users"
+  add_foreign_key "options", "surveys"
   add_foreign_key "questions", "users"
   add_foreign_key "stars", "answers"
   add_foreign_key "stars", "users"

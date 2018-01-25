@@ -6,7 +6,7 @@ CarrierWave.configure do |config|
     region: 'us-west-2'
   }
 
-  config.fog_directory = 'awesome-answers-nov-2017' # AWS S3 Bucket Name
+  config.fog_directory = 'awesome-answers-ccc21' # AWS S3 Bucket Name
   config.fog_public = false
   config.fog_attributes = {
     'Cache-Control' => "max-age=#{365.day.to_i}"

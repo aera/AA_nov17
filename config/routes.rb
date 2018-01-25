@@ -5,12 +5,15 @@ Rails.application.routes.draw do
 
   namespace :api, defaults: {format: :json} do
     namespace :v1 do
-      resources :questions
+      resources :questions, only: [:index, :show, :create, :destroy]
+      resources :tokens, only: [:create]
     end
   end
 
 
   match "/delayed_job", to: DelayedJobWeb, anchor: false, via: [:get, :post]
+
+  resources :surveys, only: [:new, :create]
 
   # Admin related routes
   namespace :admin do
@@ -30,7 +33,7 @@ Rails.application.routes.draw do
   resource :session, only: [:new, :create, :destroy]
 
   # User related routes
-  resources :users, only: [:new, :create]
+  resources :users, only: [:new, :create, :show, :index]
 
   # Question related routes
   resources :questions do
