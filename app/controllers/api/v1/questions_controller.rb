@@ -8,8 +8,8 @@
 
 class Api::V1::QuestionsController < Api::ApplicationController
   before_action :authenticate_user!
-  before_action :find_question, only: [:show]
-  
+  before_action :find_question, only: [:show, :destroy]
+
   def show
     # Test to see if current_user works
     # return render json: current_user
@@ -19,7 +19,7 @@ class Api::V1::QuestionsController < Api::ApplicationController
   def index
     @questions = Question.order(created_at: :desc)
     # When using jbuilder, do not use the `json:`
-    # option with render. Use render as you would with erb
+    # option with render. Use render as you with erb
     # templates.
     # render json: @questions
   end
@@ -27,10 +27,13 @@ class Api::V1::QuestionsController < Api::ApplicationController
   def create
     question = Question.new(question_params)
     question.user = current_user
+
     if question.save
       render json: { id: question.id }
     else
-      render json: { error: question.errors.full_messages }
+      # When sending a validation error, you should specify the :bad_request
+      # (i.e. code 400) status.
+      render json: { error: question.errors.full_messages }, status: :bad_request
     end
   end
 
@@ -51,3 +54,9 @@ class Api::V1::QuestionsController < Api::ApplicationController
     params.require(:question).permit(:title, :body)
   end
 end
+
+
+
+
+
+## bump
