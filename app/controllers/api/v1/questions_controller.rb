@@ -28,13 +28,11 @@ class Api::V1::QuestionsController < Api::ApplicationController
     question = Question.new(question_params)
     question.user = current_user
 
-    if question.save
-      render json: { id: question.id }
-    else
-      # When sending a validation error, you should specify the :bad_request
-      # (i.e. code 400) status.
-      render json: { error: question.errors.full_messages }, status: :bad_request
-    end
+    # When saving a model instance with `save!`, any
+    # validation error that occurs will cause your
+    # app to raise an ActiveRecord::RecordInvalid error.
+    question.save!
+    render json: { id: question.id }
   end
 
   def destroy

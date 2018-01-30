@@ -15,6 +15,8 @@ class Api::ApplicationController < ApplicationController
   # You can provide a 'with:' argument with the name of a method
   # that will called when the error occurs.
   rescue_from ActiveRecord::RecordNotFound, with: :record_not_found
+  rescue_from ActiveRecord::RecordInvalid, with: :record_invalid
+
 
   def not_found
     render(
@@ -94,6 +96,24 @@ class Api::ApplicationController < ApplicationController
         }]
       },
       status: :internal_server_error # <-- Rails alias for status code 500
+    )
+  end
+
+  def record_invalid(error)
+    record = error.record
+    errors = record.errors.map do |field, message|
+      {
+        type: error.class.to_s,
+        record_type: record.class.to_s,
+        field: field,
+        message: message
+      }
+    end
+    render(
+      json: {
+        errors: errors
+      },
+      status: :unprocessable_entity # <-- alias for status code 522
     )
   end
 end
