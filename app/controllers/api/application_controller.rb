@@ -1,6 +1,18 @@
 class Api::ApplicationController < ApplicationController
   skip_before_action :verify_authenticity_token
 
+  def not_found
+    render(
+      json: {
+        errors: [{
+          type: 'NotFound'
+        }]
+      },
+      status: :not_found # :not_found is alias for 404 in rails
+    )
+  end
+
+  private
   def user_signed_in?
     current_user.present?
   end
@@ -33,7 +45,6 @@ class Api::ApplicationController < ApplicationController
   end
   helper_method :current_user
 
-  private
   # headers: {'authorization' : 'JWT <token>'}
   # headers: {'authorization' : 'API_KEY <token>'}
   def api_key

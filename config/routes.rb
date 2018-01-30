@@ -8,6 +8,13 @@ Rails.application.routes.draw do
       resources :questions, only: [:index, :show, :create, :destroy]
       resources :tokens, only: [:create]
     end
+    # The following route will match any URL that hasn't been
+    # matched already inside the :api namespace.
+    # What makes this possible is putting a * in front of
+    # the path (i.e. '#unmatched_route').
+    # `match` can support multiple HTTP verbs at a time. They
+    # must specified with the `via:` argument.
+    match '*unmatched_route', to: 'application#not_found', via: :all
   end
 
 
