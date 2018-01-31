@@ -14,8 +14,23 @@ import {Navigation} from '../components/Navigation';
 import {ready, qS} from '../utilities';
 
 ready(() => {
+  const navigationDiv = qS('#Navigation');
+  // HTML nodes have a "dataset" property that contain
+  // all html attributes that begin with "data-" as keys with
+  // their values associated.
+  // For example:
+  // <div id="Test" data-props="{a: 1}" data-target="#node-id"> </div>
+  // qS('#Test').dataset.props // returns "{a: 1}"
+  // qS('#Test').dataset.target // returns "#node-id"
+  const props = JSON.parse(navigationDiv.dataset.props);
+  navigationDiv.dataset.props = null;
+
   ReactDOM.render(
-    <Navigation />,
-    qS('#Navigation')
+    <Navigation {...props} />,
+    navigationDiv
   );
 });
+
+
+
+// bump

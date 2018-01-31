@@ -15,7 +15,14 @@
   </head>
 
   <body>
-    <div id="Navigation"> </div>
+    <%=
+      tag.div(
+        id: "Navigation",
+        data: {
+          props: current_user&.to_props || {}.to_json
+        }
+      )
+    %>
     <a href="/">Home</a>
     |
     <%= link_to 'New Question', new_question_path %>

@@ -49,6 +49,16 @@ class User < ApplicationRecord
     "#{first_name} #{last_name}"
   end
 
+  def to_props
+    ActiveRecord::Base.include_root_in_json = true
+    json = to_json(
+      only: [:id, :first_name, :last_name],
+      methods: [:full_name]
+    )
+    ActiveRecord::Base.include_root_in_json = false
+    json
+  end
+
   private
   def generate_api_key
     # We may accidently generate an api key that a user already owns.
