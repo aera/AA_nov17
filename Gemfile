@@ -23,6 +23,7 @@ gem 'uglifier', '>= 1.3.0'
 # See https://github.com/rails/execjs#readme for more supported runtimes
 # gem 'therubyracer', platforms: :ruby
 gem 'faraday'
+gem 'webpacker', '~> 3.0.0'
 gem 'font-awesome-rails'
 gem 'delayed_job_active_record'
 gem 'delayed_job_web'
