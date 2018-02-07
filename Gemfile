@@ -44,6 +44,10 @@ gem 'rack-cors'
 gem 'carrierwave', '~>1.0'
 gem 'mini_magick'
 gem 'fog'
+gem 'aasm'
+
+gem 'devise'
+gem 'activeadmin'
 
 # Use Capistrano for deployment
 # gem 'capistrano-rails', group: :development

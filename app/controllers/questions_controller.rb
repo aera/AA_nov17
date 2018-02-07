@@ -16,7 +16,7 @@ class QuestionsController < ApplicationController
     if @liked
       @questions = current_user.liked_questions
     else
-      @questions = Question.all.order(created_at: :desc)
+      @questions = Question.viewable.order(created_at: :desc)
     end
 
     # respond_to method enables an action to send different

@@ -73,3 +73,4 @@ puts "Login as admin with #{super_user.email} and password of '#{PASSWORD}'!"
 
 
 # bump
+AdminUser.create!(email: 'admin@example.com', password: 'password', password_confirmation: 'password') if Rails.env.development?

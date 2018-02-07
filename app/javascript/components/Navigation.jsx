@@ -73,6 +73,11 @@ class Navigation extends Component {
             <NavItem>
               <NavLink href="/questions">Questions</NavLink>
             </NavItem>
+
+            <NavItem>
+              <NavLink href="/my_questions">My Questions</NavLink>
+            </NavItem>
+            
             { this._renderUserNavItems() }
           </Nav>
         </Collapse>

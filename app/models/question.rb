@@ -31,6 +31,42 @@ class Question < ApplicationRecord
 
   mount_uploader :image, ImageUploader
 
+  include AASM
+
+  aasm whiny_transitions: false do
+    state :draft, initial: true
+    state :published
+    state :stale
+    state :answered
+    state :locked
+    state :archived
+
+    event :publish do
+      transitions from: :draft, to: :published
+    end
+
+    event :lock do
+      transitions from: [:published, :stale, :answered], to: :locked
+    end
+
+    event :answer do
+      transitions from: [:published, :stale], to: :answered
+    end
+
+    event :make_stale do
+      transitions from: :published, to: :stale
+    end
+
+    event :archive do
+      transitions to: :archived
+    end
+
+  end
+
+  def self.viewable
+    where(aasm_state: [:published, :answered, :stale])
+  end
+
   # if you want to user friendly_id gem, make sure to comment out to_param
   # def to_param
   #   "#{id}-#{title}".parameterize

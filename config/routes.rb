@@ -1,4 +1,11 @@
 Rails.application.routes.draw do
+
+
+  devise_for :admin_users, ActiveAdmin::Devise.config
+  ActiveAdmin.routes(self)
+  match '/client', to: "client#index", via: :all
+  match '/client/*path', to: "client#index", via: :all
+
   # namespace will automatically prefix routes with the first argument.
   # Meaning that the route below will all question routes
   # with /api/v1/ in front.
@@ -52,7 +59,11 @@ Rails.application.routes.draw do
     end
     resources :likes, only: [:create, :destroy], shallow: true
     resources :votes, only: [:create, :update, :destroy], shallow: true
+    resources :publishings, only: :create
   end
+
+  resources :my_questions, only: :index
+
   # The `resources` will generate all CRUD REST conventions
   # routes we did below for any resource.
 

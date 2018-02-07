@@ -4,7 +4,7 @@
 
 <p>By
   <% if @question.user %>
-    <%= link_to  @question.user.full_name, user_path(@question.user) %>
+    <%= link_to @question.user.full_name, user_path(@question.user) %>
   <% else %>
     <%= '[deleted]' %>
   <% end %>
@@ -35,6 +35,10 @@
   %>
 <% end %>
 
+<% if can?(:publish, @question) && @question.may_publish? %>
+  <%= link_to 'publish', question_publishings_path(@question), method: :post %>
+<% end %>
+
 <% if can?(:like, @question) %>
   <% if @user_like %>
     <%= link_to fa_icon("thumbs-up 2x"), like_path(@user_like), method: :delete %>
@@ -45,7 +49,6 @@
 (<%= pluralize(@question.likes.count, 'like') %>)
 
 <%= question_vote(@user_vote, @question).html_safe if user_signed_in? %>
-<%# code block for line above moved to votes_helper file %>
 
 <h2>Answers</h2>
 
@@ -88,7 +91,6 @@
             <%= link_to fa_icon('star-o 2x'), answer_stars_path(answer), method: :post %>
           <% end %>
         <% end %>
-
 
         <% if can?(:destroy, answer) %>
           <%= link_to(
