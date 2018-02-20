@@ -1,0 +1,17 @@
+left at Octokit Bundle
+reseed questions (edited seeds.rb)
+make sure all q's are "published" -> aasm
+
+Steve went to gists stuff, check...
+https://gist.github.com/
+http://octokit.github.io/octokit.rb/Octokit/Client/Gists.html
+
+https://developer.github.com/apps/building-oauth-apps/authorization-options-for-oauth-apps/
+https://developer.github.com/apps/building-oauth-apps/scopes-for-oauth-apps/
+
+edited questions controller
+added gist button, edit question show page
+edited routes.rb in question-related routes, publish gist (4 indents are counted as line in markdown)
+
+
+edited questions controller, method publish_gist..parameterized... content for multiline string

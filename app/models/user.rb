@@ -37,12 +37,24 @@ class User < ApplicationRecord
   # format meaning that the beginning email should have valid characters
   # (e.g. alphabet, +, -, numbers, .), the middle has a `@` and that the end
   # also only contains valid characters.
-  validates :email, presence: true, uniqueness: true, format: VALID_EMAIL_REGEX
+  validates :email,
+    presence: true,
+    uniqueness: true,
+    format: VALID_EMAIL_REGEX,
+    unless: :from_oauth?
 
   # `validates` can take multiple column names as its first arguments. All
   # validation rules provided will apply all given columns.
-  validates :first_name, :last_name, presence: true
+  validates :first_name, presence: true
+  validates :last_name, presence: true, unless: :from_oauth?
 
+  # `serialize` takes a column name which will change the behaviour
+  # when writing and reading to that column.
+  # When writing, the value will first be serialize (or encoded
+  # as text in such a way that the data structure can be preserved)
+  # When reading, the value will be deserialized allowing to read
+  # not as text but as the original data structure that was saved.
+  serialize :oauth_raw_data
   before_create :generate_api_key
 
   def full_name
@@ -57,6 +69,32 @@ class User < ApplicationRecord
     )
     ActiveRecord::Base.include_root_in_json = false
     json
+  end
+
+  def self.create_from_oauth(oauth_data)
+    first_name, last_name = oauth_data["info"]["name"]&.split || [oauth_data["info"]["nickname"]]
+    # const [firstName, lastName] = [1, 2]
+
+    User.create(
+      uid: oauth_data["uid"],
+      provider: oauth_data["provider"],
+      first_name: first_name,
+      last_name: last_name,
+      oauth_token: oauth_data["credentials"]["token"],
+      oauth_raw_data: oauth_data,
+      password: SecureRandom.hex(32)
+    )
+  end
+
+  def self.find_by_oauth(oauth_data)
+    self.find_by(
+      provider: oauth_data["provider"],
+      uid: oauth_data["uid"]
+    )
+  end
+
+  def from_oauth?
+    uid.present? && provider.present?
   end
 
   private

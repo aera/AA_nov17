@@ -1,6 +1,7 @@
 class QuestionsController < ApplicationController
   before_action :authenticate_user!, except: [:show, :index]
-  before_action :find_question, only: [:show, :edit, :update, :destroy]
+  before_action :find_question,
+    only: [:show, :edit, :update, :destroy, :publish_gist]
   before_action :authorize_user!, only: [:edit, :update, :destroy]
   # Public methods in Controllers are called `actions`.
   # They are used to get data from models and show
@@ -30,6 +31,31 @@ class QuestionsController < ApplicationController
       format.json { render json: @questions }
       format.xml { render xml: @questions }
     end
+  end
+
+  def publish_gist
+    content = %{
+\# #{@question.title}
+
+#{@question.body}
+
+\# Answers
+
+#{@question.answers.map{ |a| '- ' + a.body }.join('  \n')}
+    }
+
+    client = Octokit::Client.new(
+      access_token: current_user.oauth_token
+    )
+
+    client.create_gist(
+      description: @question.title,
+      public: true, files: {
+        "#{@question.title.parameterize}.md" => {content: content}
+      }
+    )
+
+    redirect_to @question
   end
 
   def create
